@@ -49,11 +49,11 @@ static func move_actor(actor: Node3D, world: PhysicsDirectSpaceState3D,
 					var wall_check = PhysicsRayQueryParameters3D.create(current_position, check_target, KobPhysics.PHYSICS_TERRAIN)
 					var wall_result = world.intersect_ray(wall_check)
 					if !wall_result:
-						if Player.DEBUG_WALKING: DebugDraw3D.draw_line(wall_check.from, wall_check.to, Color.YELLOW, 1.0)
+						if Player.DEBUG_WALKING: DebugDraw.draw_line(wall_check.from, wall_check.to, Color.YELLOW, 1.0)
 						new_position = movement_target
 						has_solution = true
 					else:
-						if Player.DEBUG_WALKING: DebugDraw3D.draw_line(wall_check.from, wall_check.to, Color.RED, 3.0)
+						if Player.DEBUG_WALKING: DebugDraw.draw_line(wall_check.from, wall_check.to, Color.RED, 3.0)
 						if output.facing_wall == null:
 							output.facing_wall = wall_result.collider
 							output.facing_wall_normal = wall_result.normal
@@ -68,10 +68,10 @@ static func move_actor(actor: Node3D, world: PhysicsDirectSpaceState3D,
 			var vertical_result = world.intersect_ray(vertical_check)
 			if !vertical_result:
 				new_position = vertical_target
-				if Player.DEBUG_WALKING: DebugDraw3D.draw_line(new_position, vertical_target, Color.LIME, 3.0)
+				if Player.DEBUG_WALKING: DebugDraw.draw_line(new_position, vertical_target, Color.LIME, 3.0)
 			else:
 				new_position = vertical_result.position - vertical_offset.normalized() * vertical_radius
-				if Player.DEBUG_WALKING: DebugDraw3D.draw_line(vertical_result.position, new_position, Color.LIME, 3.0)
+				if Player.DEBUG_WALKING: DebugDraw.draw_line(vertical_result.position, new_position, Color.LIME, 3.0)
 		if has_horizontal_offset && radius > 0:
 			var right = horizontal_offset.rotated(Vector3.UP, -PI * 0.5).normalized()
 			var right_wall_check = PhysicsRayQueryParameters3D.create(new_position, new_position + right * radius, KobPhysics.PHYSICS_TERRAIN)
@@ -96,7 +96,7 @@ static func move_actor(actor: Node3D, world: PhysicsDirectSpaceState3D,
 			if ground_result:
 				new_position.y = ground_result.position.y + height_above_ground
 				output.standing_on = ground_result.collider
-		if Player.DEBUG_WALKING: DebugDraw3D.draw_line(actor.global_position, new_position, Color.CYAN, 5.0)
+		if Player.DEBUG_WALKING: DebugDraw.draw_line(actor.global_position, new_position, Color.CYAN, 5.0)
 		actor.global_position = new_position
 	return output
 

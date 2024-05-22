@@ -87,10 +87,6 @@ text = "[juggle boxes with J]"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DebugDrawManager" type="DebugDrawManager" parent="."]
-process_priority = 0
-process_physics_priority = 0
-
 [node name="DropShadow" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.6, 0, 0, 0, 0.1, 0, 0, 0, 0.6, 0, -0.69898, 0)
 mesh = SubResource("SphereMesh_x35il")

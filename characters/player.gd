@@ -5,6 +5,11 @@ class_name Player
 
 # TODO Consolidate poof spawning
 
+const DEBUG_WALKING: bool = false
+const DEBUG_CLIMBING: bool = false
+const DEBUG_SHADOW = false
+const DEBUG_CAMERA: bool = false
+
 # Constants
 const PLAYER_RADIUS: float = 0.3
 const PLAYER_HALF_HEIGHT: float = 0.4 # Must be greater than PLAYER_RADIUS
@@ -47,11 +52,6 @@ const CAMERA_MOVE_SPEED: float = 12.0
 const CAMERA_ROTATE_SPEED: float = 3.0
 const CAMERA_WALL_RECOVER_SPEED: float = 1.0
 const CAMERA_MINIMUM_DISTANCE: float = 0.1
-
-const DEBUG_WALKING: bool = false
-const DEBUG_CLIMBING: bool = false
-const DEBUG_SHADOW = false
-const DEBUG_CAMERA: bool = false
 
 # Settings
 var horizontal_camera_invert = -1.0
@@ -140,13 +140,13 @@ func _physics_process(delta):
 						if wall_angle < CLIMB_WALL_GRAB_MAXIMUM_NORMAL_ANGLE:
 							if DEBUG_CLIMBING:
 								print("Facing wall for " + str(current_climbing_delay_timer))
-								DebugDraw3D.draw_line(global_position, global_position + move_output.facing_wall_normal, Color.GREEN, 0.01)
+								DebugDraw.draw_line(global_position, global_position + move_output.facing_wall_normal, Color.GREEN, 0.01)
 							current_climbing_delay_timer += delta
 							should_reset_climbing_timer = false
 							should_try_to_start_climbing = current_climbing_delay_timer >= DELAY_BEFORE_CLIMBING_SECONDS
 						else:
 							if DEBUG_CLIMBING:
-								DebugDraw3D.draw_line(global_position, global_position + move_output.facing_wall_normal, Color.RED, 0.01)
+								DebugDraw.draw_line(global_position, global_position + move_output.facing_wall_normal, Color.RED, 0.01)
 					current_walking_dust_timer -= delta
 					if input.sword && current_sword_charge < CHARGE_ATTACK_WINDUP:
 						current_walking_dust_timer = WALKING_DUST_TIMER
@@ -213,7 +213,7 @@ func _physics_process(delta):
 				if input.direction.length() > 0.25:
 					# TODO Directional jumping along the cliff face
 					current_velocity = current_facing * MOVE_SPEED + Vector3.UP * cached_starting_jump_vertical_velocity
-					if DEBUG_CLIMBING: DebugDraw3D.draw_line(global_position, global_position + current_facing, Color.BLUE, 3.0)
+					if DEBUG_CLIMBING: DebugDraw.draw_line(global_position, global_position + current_facing, Color.BLUE, 3.0)
 				else:
 					current_velocity = Vector3.ZERO
 			else:
@@ -451,7 +451,7 @@ func motor_climb(world: PhysicsDirectSpaceState3D, input, delta):
 		var raycast = PhysicsRayQueryParameters3D.create(check_start, check_start + to_raycast_target * 2.0, KobPhysics.PHYSICS_CLIMBABLE)
 		var raycast_result = world.intersect_ray(raycast)
 		if raycast_result:
-			#DebugDraw3D.draw_line(raycast_result.position, raycast_result.position + raycast_result.normal * 0.25, Color.CYAN, 0.5)
+			#DebugDraw.draw_line(raycast_result.position, raycast_result.position + raycast_result.normal * 0.25, Color.CYAN, 0.5)
 			if output.current_surface == null:
 				output.current_surface = raycast_result.collider
 			if i % 2 == 0:
@@ -474,7 +474,7 @@ func motor_climb(world: PhysicsDirectSpaceState3D, input, delta):
 				average_surface_normal *= 2.0
 			current_facing = current_facing.move_toward(-average_surface_normal, delta * CLIMB_ROTATE_SPEED_RADIANS_PER_SECOND).normalized()
 			if !current_facing.is_equal_approx(Vector3.UP) && !current_facing.is_equal_approx(Vector3.DOWN):
-				if DEBUG_CLIMBING: DebugDraw3D.draw_line(climbing_raycast_target, climbing_raycast_target + average_surface_normal * CLIMB_WALL_GRAB_DISTANCE * 2.0, Color.BLUE, 1.0)
+				if DEBUG_CLIMBING: DebugDraw.draw_line(climbing_raycast_target, climbing_raycast_target + average_surface_normal * CLIMB_WALL_GRAB_DISTANCE * 2.0, Color.BLUE, 1.0)
 				var movement_offset = (input.x * input_right_facing + input.y * input_up_facing) * CLIMB_SPEED
 				#print("currently climbing in direction " + str(movement_offset))
 				movement_offset *= delta
@@ -493,7 +493,7 @@ func motor_climb(world: PhysicsDirectSpaceState3D, input, delta):
 		else:
 			output.current_surface = null
 	#if output.current_surface == null:
-	#	DebugDraw3D.draw_line(global_position, climbing_raycast_target, Color.RED, 5.0)
+	#	DebugDraw.draw_line(global_position, climbing_raycast_target, Color.RED, 5.0)
 	return output
 
 func attempt_climbable_wall_grab(world: PhysicsDirectSpaceState3D, input_right_facing: Vector3, input_forward_facing: Vector3):
@@ -513,17 +513,17 @@ func attempt_ledge_grab(world: PhysicsDirectSpaceState3D):
 	var facing_wall_result = world.intersect_ray(PhysicsRayQueryParameters3D.create(global_position, wall_check_target, KobPhysics.PHYSICS_TERRAIN))
 	if facing_wall_result:
 		var start = facing_wall_result.position + facing_wall_result.normal * LEDGE_GRAB_CLIMB_INWARDS_DISTANCE
-		if DEBUG_CLIMBING: DebugDraw3D.draw_line(facing_wall_result.position, start, Color.LIME, 1.0)
+		if DEBUG_CLIMBING: DebugDraw.draw_line(facing_wall_result.position, start, Color.LIME, 1.0)
 		var over_head_target = start + Vector3.UP * LEDGE_GRAB_MAXIMUM_HEIGHT
 		var over_ledge_target = over_head_target - facing_wall_result.normal * LEDGE_GRAB_CLIMB_INWARDS_DISTANCE * 2.0
 		var on_ledge_target = over_ledge_target - Vector3.UP * (LEDGE_GRAB_MAXIMUM_HEIGHT)
 		if !world.intersect_ray(PhysicsRayQueryParameters3D.create(start, over_head_target, KobPhysics.PHYSICS_TERRAIN)):
-			if DEBUG_CLIMBING: DebugDraw3D.draw_line(start, over_head_target, Color.LIME, 1.0)
+			if DEBUG_CLIMBING: DebugDraw.draw_line(start, over_head_target, Color.LIME, 1.0)
 			if !world.intersect_ray(PhysicsRayQueryParameters3D.create(over_head_target, over_ledge_target, KobPhysics.PHYSICS_TERRAIN)):
-				if DEBUG_CLIMBING: DebugDraw3D.draw_line(over_head_target, over_ledge_target, Color.LIME, 1.0)
+				if DEBUG_CLIMBING: DebugDraw.draw_line(over_head_target, over_ledge_target, Color.LIME, 1.0)
 				var ledge_result = world.intersect_ray(PhysicsRayQueryParameters3D.create(over_ledge_target, on_ledge_target, KobPhysics.PHYSICS_TERRAIN))
 				if ledge_result && Vector3.UP.angle_to(ledge_result.normal) < WALKING_SLOPE_MAXIMUM_RADIANS:
-					if DEBUG_CLIMBING: DebugDraw3D.draw_line(over_ledge_target, ledge_result.position, Color.LIME, 1.0)
+					if DEBUG_CLIMBING: DebugDraw.draw_line(over_ledge_target, ledge_result.position, Color.LIME, 1.0)
 					output.found_ledge = true
 					output.pull_to = ledge_result.position + Vector3.UP * PLAYER_HALF_HEIGHT
 					output.corner = facing_wall_result.position
@@ -533,11 +533,11 @@ func attempt_ledge_grab(world: PhysicsDirectSpaceState3D):
 				else:
 					if DEBUG_CLIMBING: print("Discarding ledge result, could not find a place to stand on top")
 			else:
-				if DEBUG_CLIMBING: DebugDraw3D.draw_line(over_head_target, over_ledge_target, Color.RED, 1.0)
+				if DEBUG_CLIMBING: DebugDraw.draw_line(over_head_target, over_ledge_target, Color.RED, 1.0)
 		else:
-			if DEBUG_CLIMBING: DebugDraw3D.draw_line(start, over_head_target, Color.RED, 1.0)
+			if DEBUG_CLIMBING: DebugDraw.draw_line(start, over_head_target, Color.RED, 1.0)
 	else:
-		if DEBUG_CLIMBING: DebugDraw3D.draw_line(global_position, wall_check_target, Color.RED, 1.0)
+		if DEBUG_CLIMBING: DebugDraw.draw_line(global_position, wall_check_target, Color.RED, 1.0)
 	return output
 
 var current_juggling_score = 0
