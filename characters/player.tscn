@@ -1,0 +1,101 @@
+[gd_scene load_steps=8 format=3 uid="uid://ml20yuutom5b"]
+
+[ext_resource type="Script" path="res://characters/player.gd" id="1_qpt0w"]
+[ext_resource type="Material" uid="uid://de5b7qx1jk5r7" path="res://characters/basic_toon_material.tres" id="2_glrce"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ee1fc"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_h0530"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rwtbf"]
+transparency = 1
+albedo_color = Color(0, 0, 0, 0.501961)
+
+[sub_resource type="SphereMesh" id="SphereMesh_x35il"]
+material = SubResource("StandardMaterial3D_rwtbf")
+
+[sub_resource type="TorusMesh" id="TorusMesh_meymo"]
+inner_radius = 0.1
+outer_radius = 0.3
+
+[node name="Player" type="Node3D" groups=["actor", "player"]]
+script = ExtResource("1_qpt0w")
+
+[node name="Capsule" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+material_override = ExtResource("2_glrce")
+mesh = SubResource("CapsuleMesh_ee1fc")
+
+[node name="Nose" type="MeshInstance3D" parent="Capsule"]
+transform = Transform3D(0.324875, 0, 0, 0, 0.324875, 0, 0, 0, 0.324875, 0, 0.580046, -0.540356)
+material_override = ExtResource("2_glrce")
+mesh = SubResource("BoxMesh_h0530")
+
+[node name="PlayerCamera" type="Camera3D" parent="."]
+fov = 60.0
+
+[node name="CanvasGroup" type="CanvasGroup" parent="."]
+
+[node name="ControlsOverlay" type="RichTextLabel" parent="CanvasGroup"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 834.0
+offset_bottom = 443.0
+text = "white_deer_prototype_0.0.1
+
+WASD - move
+Q/E - rotate camera
+J - sword
+J (hold 1 second) - spin attack
+K+Direction - dash
+K (while falling) - glide
+K (while climbing green walls or ledge grabbing) - drop
+
+Ctrl+R - reset level"
+
+[node name="StateLabel" type="Label" parent="CanvasGroup"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 314.0
+offset_top = 438.0
+offset_right = 570.0
+offset_bottom = 566.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+text = "[state]"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScoreLabel" type="Label" parent="CanvasGroup"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 286.0
+offset_top = 14.0
+offset_right = 587.0
+offset_bottom = 41.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+text = "[juggle boxes with J]"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DebugDrawManager" type="DebugDrawManager" parent="."]
+process_priority = 0
+process_physics_priority = 0
+
+[node name="DropShadow" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.6, 0, 0, 0, 0.1, 0, 0, 0, 0.6, 0, -0.69898, 0)
+mesh = SubResource("SphereMesh_x35il")
+
+[node name="GliderRenderer" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6227, 0)
+material_override = ExtResource("2_glrce")
+mesh = SubResource("TorusMesh_meymo")

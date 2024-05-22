@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://cuwbn6avu1chx"]
+
+[ext_resource type="Script" path="res://characters/projectile.gd" id="1_qxqnj"]
+[ext_resource type="Material" uid="uid://clp6wihnbrd8f" path="res://characters/debug_attack_material.tres" id="2_mqkd8"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_mpwst"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8lkca"]
+radius = 2.0
+
+[node name="DebugSpinProjectile" type="Area3D"]
+collision_layer = 256
+collision_mask = 256
+script = ExtResource("1_qxqnj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 0.5, 0, 0, 0, 2, 0, 0, 0)
+material_override = ExtResource("2_mqkd8")
+mesh = SubResource("TorusMesh_mpwst")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_8lkca")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.8
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="queue_free"]

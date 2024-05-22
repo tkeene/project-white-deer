@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://dtgxcq7773isw"]
+
+[ext_resource type="Script" path="res://characters/projectile.gd" id="1_4weio"]
+[ext_resource type="Material" uid="uid://clp6wihnbrd8f" path="res://characters/debug_attack_material.tres" id="1_vir3p"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_jf5ig"]
+size = Vector3(0.2, 0.2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c35t4"]
+size = Vector3(0.3, 1, 1.1)
+
+[node name="DebugStabProjectile" type="Area3D"]
+collision_layer = 256
+collision_mask = 256
+script = ExtResource("1_4weio")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+material_override = ExtResource("1_vir3p")
+mesh = SubResource("PrismMesh_jf5ig")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.3
+autostart = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+shape = SubResource("BoxShape3D_c35t4")
+
+[connection signal="timeout" from="Timer" to="." method="queue_free"]

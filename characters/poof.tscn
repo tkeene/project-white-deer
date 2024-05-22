@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://ch7f3srl448fd"]
+
+[ext_resource type="Script" path="res://characters/poof.gd" id="1_phluq"]
+[ext_resource type="Shader" uid="uid://c0kx88x35wlfk" path="res://characters/poof.tres" id="2_j32pw"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_veuxk"]
+radius = 0.1
+height = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yanfg"]
+render_priority = 0
+shader = ExtResource("2_j32pw")
+
+[node name="Poof" type="Node3D"]
+script = ExtResource("1_phluq")
+
+[node name="Sphere" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00114696, -0.00437925, 0.0020996)
+mesh = SubResource("SphereMesh_veuxk")
+surface_material_override/0 = SubResource("ShaderMaterial_yanfg")

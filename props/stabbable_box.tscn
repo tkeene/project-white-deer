@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://cjjcrmfc0sbr8"]
+
+[ext_resource type="Script" path="res://props/stabbable_box.gd" id="1_81xsp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yu8i7"]
+albedo_color = Color(1, 0.568627, 0.396078, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_s7cjm"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b2tlq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0113e"]
+transparency = 1
+albedo_color = Color(0, 0, 0, 0.501961)
+
+[sub_resource type="SphereMesh" id="SphereMesh_8bdvj"]
+material = SubResource("StandardMaterial3D_0113e")
+
+[node name="StabbableBox" type="RigidBody3D" groups=["actor"]]
+collision_layer = 258
+collision_mask = 259
+script = ExtResource("1_81xsp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_yu8i7")
+mesh = SubResource("BoxMesh_s7cjm")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 0, 0)
+shape = SubResource("BoxShape3D_b2tlq")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="DropShadow" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.6, 0, 0, 0, 0.1, 0, 0, 0, 0.6, 0, -0.241254, 0)
+mesh = SubResource("SphereMesh_8bdvj")
+
+[connection signal="timeout" from="Timer" to="." method="queue_free"]

@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://dhg2tuugfnmbn"]
+
+[ext_resource type="Script" path="res://characters/hit_effect.gd" id="1_j47rn"]
+
+[sub_resource type="Curve" id="Curve_cj6ky"]
+_data = [Vector2(0, 0), 0.0, 5.51315, 0, 0, Vector2(0.072327, 1), -2.58375, -2.58375, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_uqodf"]
+_data = [Vector2(0, 0), 0.0, 0.370223, 0, 0, Vector2(0.503226, 0.1875), 0.366194, -0.373374, 0, 0, Vector2(1, 0), -0.358247, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="TubeTrailMesh" id="TubeTrailMesh_28mij"]
+section_length = 0.5
+curve = SubResource("Curve_uqodf")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1k2mi"]
+shading_mode = 0
+albedo_color = Color(1, 0.67, 0.67, 1)
+
+[node name="HitEffect" type="Node3D"]
+script = ExtResource("1_j47rn")
+size_over_time = SubResource("Curve_cj6ky")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 4.37114e-08, 0, -4.37114e-08, 1, 1, 4.37114e-08, 1.91069e-15, 0, 0, 0)
+mesh = SubResource("TubeTrailMesh_28mij")
+surface_material_override/0 = SubResource("StandardMaterial3D_1k2mi")
